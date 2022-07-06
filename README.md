@@ -1,3 +1,3 @@
 # ngs
 NGS Data Analysis
-# project name
+project name
