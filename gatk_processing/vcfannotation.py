@@ -54,11 +54,3 @@ def vcfTotable(idir, odir, ivcf, otable):
     '''
     os.system(f"gatk VariantsToTable -V {idir}{ivcf} -F CHROM -F POS -F REF -F ALT -F FUNCOTATION -GF AD -GF DP -O {odir}{otable}")
     print(f"{odir}{otable} generated successfully...")
-
-anotfuncotator(idir='/Volumes/lilac_data_ziv/transciptome/paired_pnet/Project_12502_F/vcfpass/', 
-                odir='./', 
-                hgref='/Volumes/lilac_home_singhh5/hg38/grch38_gencode_bwa_index/GRCh38.primary_assembly.genome.fa', 
-                hgver='hg38', 
-                funcotator_data='/Volumes/lilac_data_ziv/transciptome/paired_pnet/funcotator_dataSources.v1.7.20200521s', 
-                ivcf = 'M1.vcf', 
-                ovcf='1.vcf')
