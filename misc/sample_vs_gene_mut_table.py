@@ -16,8 +16,3 @@ def funcotator_anot_vcf_mut_gene_table(vcf):
     return(table)
 
 funcotator_anot_vcf_mut_gene_table(vcf='/Volumes/lilac_data_ziv/transciptome/paired_pnet/Project_12502_F/anotvcf/14_3_IGO_12502_F_9_S45_L002.pass.anot.vcf')
-
-
-
-
-funcotator_anot_vcf_mut_gene_table(vcf='/Volumes/lilac_data_ziv/transciptome/paired_pnet/Project_12502_F/anotvcf/14_3_IGO_12502_F_9_S45_L002.pass.anot.vcf')
