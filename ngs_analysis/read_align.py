@@ -83,8 +83,28 @@ def bowtie2_fastq_aln(idir, odir, genome_index, reads, sample, nthreads):
 
 #bowtie2_fastq_aln(idir='./', odir='./', genome_index='GRCh38_noalt_as/GRCh38_noalt_as', reads=['fastq/EZ-123-B_IGO_08138_J_2_S101_R1_001.fastq.gz'], sample='E', nthreads=4)    
 
-def star_rnaseq_fastq_2pass_aln():
-    pass
+def star_rnaseq_fastq_2pass_aln(idir, odir, reads, genome_index, gtf, sample, nthreads):
+    '''
+    STAR 2 PASS FastQ Alignment
+    https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4631051/
+    
+    RUN: star_rnaseq_fastq_2pass_aln(idir='./', odir='./', reads=['f1.fq', 'f2.fq'], genome_index = '/path/to/genome_index', gtf = '/path/to/genome.gtf', reads=['r1.fq', 'r2.fq'], sample='E', nthreads=4)
+                --runThreadN        : number of threads
+                --genomeDir         : /path/to/genome_index
+                --sjdbGTFfile       : /path/to/gtf_file
+                --sjdbOverhang      : default: 100, 
+                --readFilesIn       : specifies the length of the genomic sequence around the annotated junction to be used in constructing the splice junctions database. Ideally, this length should be equal to the ReadLength-1, where ReadLength is the length of the reads. for Illumina 2x100b paired-end reads, the ideal value is 100-1=99 
+                --readFilesCommand  : zcat. uncompressionCommand, sends uncompressed output to stdout
+                --outFileNamePrefix : {odir}{sample}_SE_; output file prefix
+                --outSAMtype        : BAM SortedByCoordinate Unsorted. output sorted by coordinate Aligned.sortedByCoord.out.bam file, similar to samtools sort command
+                --twopassMode Basic : 1st pass mapping: it will automatically extract junctions, insert them into the genome index
+                                      2nd pass mapping: re-map all reads
 
-def star_rnaseq_fastq_1pass_aln():
-    pass
+    '''
+    os.makedirs(odir, exist_ok=True)#create temporary output directory 
+    if(len(reads) == 1):
+        os.system(f"STAR --runThreadN {nthreads} --genomeDir {genome_index} --sjdbGTFfile {gtf} --sjdbOverhang 100 --readFilesIn {reads[0]} --readFilesCommand zcat --outFileNamePrefix {odir}{sample}_SE_ --outSAMtype BAM SortedByCoordinate Unsorted --twopassMode Basic")
+        os.system(f"samtools index {odir}{sample}_SE_Aligned.sortedByCoord.out.bam")
+    else:
+        os.system(f"STAR --runThreadN {nthreads} --genomeDir {genome_index} --sjdbGTFfile {gtf} --sjdbOverhang 100 --readFilesIn {reads[0]} {reads[1]} --readFilesCommand zcat --outFileNamePrefix {fout}{sample}_PE_ --outSAMtype BAM SortedByCoordinate Unsorted --twopassMode Basic")
+        os.system(f"samtools index {odir}{sample}_PE_Aligned.sortedByCoord.out.bam")

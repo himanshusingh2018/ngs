@@ -1,3 +1,4 @@
+from http.cookies import Morsel
 import pandas as pd
 def funcotator_anot_vcf_mut_gene_table(vcf):
     '''
