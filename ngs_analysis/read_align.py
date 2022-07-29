@@ -105,6 +105,8 @@ def star_rnaseq_fastq_2pass_aln(idir, odir, reads, genome_index, gtf, sample, nt
     if(len(reads) == 1):
         os.system(f"STAR --runThreadN {nthreads} --genomeDir {genome_index} --sjdbGTFfile {gtf} --sjdbOverhang 100 --readFilesIn {reads[0]} --readFilesCommand zcat --outFileNamePrefix {odir}{sample}_SE_ --outSAMtype BAM SortedByCoordinate Unsorted --twopassMode Basic")
         os.system(f"samtools index {odir}{sample}_SE_Aligned.sortedByCoord.out.bam")
+        print(f'Output successfully generated:\n\t1. {odir}{sample}_SE_Aligned.sortedByCoord.out.bam\n\t2. {odir}{sample}_SE_Aligned.sortedByCoord.out.bam.bai')
     else:
         os.system(f"STAR --runThreadN {nthreads} --genomeDir {genome_index} --sjdbGTFfile {gtf} --sjdbOverhang 100 --readFilesIn {reads[0]} {reads[1]} --readFilesCommand zcat --outFileNamePrefix {fout}{sample}_PE_ --outSAMtype BAM SortedByCoordinate Unsorted --twopassMode Basic")
         os.system(f"samtools index {odir}{sample}_PE_Aligned.sortedByCoord.out.bam")
+        print(f'Output successfully generated:\n\t1. {odir}{sample}_PE_Aligned.sortedByCoord.out.bam\n\t2. {odir}{sample}_PE_Aligned.sortedByCoord.out.bam.bai')
