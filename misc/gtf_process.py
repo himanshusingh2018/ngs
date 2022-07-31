@@ -34,5 +34,3 @@ def gencode_feature_coordinates(gtf, idir='./', odir='./', fout='out'):
     else:
         print('Please enter correct Option'); exit()
     print(f'Successfully generated:\n\t{odir}{fout}.{option}.txt')
-
-gencode_feature_coordinates(idir='../',gtf='gencode.v41.primary_assembly.annotation.gtf')
