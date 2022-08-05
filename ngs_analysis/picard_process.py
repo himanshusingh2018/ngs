@@ -24,6 +24,7 @@ def picard_bam_clean(idir, odir, sample):
                 OUTPUT  : Output, clean bam file
 
     '''
+    os.makedirs(odir, exist_ok=True)#creat odir if not exists
     os.system(f"picard CleanSam --INPUT {idir}{sample}.sort.bam --OUTPUT {odir}{sample}.clean.bam")
     print(f"{odir}{sample}.clean.bam is generated successfully...")
 
@@ -48,5 +49,6 @@ def picard_markduplicate(idir, odir, sample):
         --VALIDATION_STRINGENCY : {STRICT, LENIENT, SILENT}. LENIENT Setting stringency to SILENT can improve performance when processing a BAM file in which variable-length data (read, qualities, tags) do not otherwise need to be decoded.  Default value: STRICT.
         --CREATE_INDEX          : {true|false}, Whether to create an index when writing VCF or coordinate sorted BAM output.  Default value: false. Possible values: {true, false} 
     '''
+    os.makedirs(odir, exist_ok=True)#creat odir if not exists
     os.system(f"picard MarkDuplicates --INPUT {idir}{sample}.clean.bam --OUTPUT {odir}{sample}.sort.mkdup.bam --METRICS_FILE {odir}{sample}.sort.dup.metrics.txt --VALIDATION_STRINGENCY LENIENT --CREATE_INDEX true")
     print(f"Successfully generated files: \n\t1: {odir}{sample}.sort.mkdup.bam \n\t2: {odir}{sample}.sort.dup.metrics.txt")

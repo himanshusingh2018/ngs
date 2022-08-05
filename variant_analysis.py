@@ -1,24 +1,36 @@
-import os
+import os, sys, glob
 import pandas as pd
+import functools
+from functools import reduce
 
-from gatk_processing.vcfannotation import  anotfuncotator
-from treeomics_analysis.treeomics_input import treeomics_input
 def main():
-    '''GATK VARIANT ANNOTATION'''
-    #Variant Annotation using funcotator
-    #anotfuncotator(idir, odir, hgref, hgver, funcotator_data, ivcf, ovcf)
-    #generate treeomics input files: 1) coverage.txt; 2) mut_read_table.txt
-    treeomics_input(vcfdir = idir, odir=odir)
-    print(f"{odir}coverage.txt is generated successfully...")
- 
+    from ngs.ngs_analysis import picard_process as pc
+
+    #STEP1: Picard Clean BAM files
+    pc.picard_bam_clean(idir = bam_aln, odir= bam_mkdup, sample=f'{sname}.sort.bam')  
+
+    #STEP2: Picard Mark Duplicates in Clean BAM files
+    pc.picard_markduplicate(idir=bam_aln, odir=bam_mkdup, sample=f'{sname}.clean.bam')
+
+    #STEP3: Copy BAM Files in Picard Duplicate Marked BAM Files
+    print(f'cp {bam_mkdup}{sname}.mkdup.bam* {bam_aln}')
+
+    #STEP4: Delete BAM if bam.mkdup is copied
+    if os.path.exists(f'{bam_aln}{sname}.mkdup.bam'): os.remove(f'{bam_aln}{sname}.sort.bam*')
+
+
 
 #data resources
-idir='/Volumes/lilac_data_ziv/transciptome/paired_pnet/Project_12502_F/anotvcf/'
-odir='./'
-hgref='/Volumes/lilac_home_singhh5/hg38/grch38_gencode_bwa_index/GRCh38.primary_assembly.genome.fa'
-hgver='hg38'
-funcotator_data='/Volumes/lilac_data_ziv/transciptome/paired_pnet/funcotator_dataSources.v1.7.20200521s'
+bam_aln = '/data/ziv/transciptome/paired_pnet/Project_12502_F/bwa_aln/'
+bam_mkdup = '/scratch/him/Project_12502_F/mkdup/'
 
+index = sys.argv[1]
+sname = [sample.split('.sort.bam')[0] for sample in os.listdir(bam_aln) if sample.endswith('.sort.bam')]
 
 if __name__ == '__main__':
-    main()
+    if index == "TEST":
+        print(f"set job index to [1-len(samples)]")
+    else:
+        main()
+
+print('All processes are completed successfully...')
