@@ -40,6 +40,7 @@ def treeomics_input(vcfdir='vcf', odir='./'):
     for s in samp:#extracting Allelic Depth (AD) and Total Depth (DP) from each vcf files and merging together
         print(f'Reading {s}...')
         d = pd.read_csv(s, sep="\t", header=0, comment = '##', engine='python', encoding = 'unicode_escape')
+        d = d[d.FILTER == 'PASS'] #Extract variant with Filter: 'PASS'
         d = d[ ['#CHROM', 'POS', 'REF', 'ALT', 'INFO', 'FORMAT', d.columns[-1]] ]
         sname = d.columns[-1] #sample name
         d[f'{sname}AD'] = d[sname].str.split(':').str[1].str.split(',').str[1] #extract Allelic Depth (AD)

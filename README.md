@@ -17,6 +17,7 @@ NGS Data Analysis
         mutect2_tumor_only
             tumoronly_nofilter : Mutect2 Somatic Variant Calling Tumor Only Mode [No Filter]
             tumoronly_filter   : Mutect2 Somatic Variant Calling Tumor Only Mode [Filter: af-only-gnomad.vcf.gz and 1000g_pon.hg38.vcf.gz]
+            filter variant     : Mutect2 Filter Variants [PASS]
 
     ngs_analysis
         genome_index

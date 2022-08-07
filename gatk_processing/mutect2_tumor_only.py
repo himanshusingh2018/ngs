@@ -1,5 +1,3 @@
-import os
-
 def tumoronly_nofilter(idir, odir, genome_fa, sample, jvm=5, nthreads=4):
     '''
     GATK Mutect2 Variant Calling Tumor Only Mode [No Filter]
@@ -47,4 +45,18 @@ def tumoronly_filter(idir, odir, genome_fa, afonlygnomadvcf, hg38pon100gvcf, sam
     os.makedirs(odir, exist_ok=True)#create odir if not exists
     print(f'gatk Mutect2 --java-options -Xmx{jvm}g -R {genome_fa} -I {idir}{sample}.bam -O {odir}{sample}.vcf.gz --germline-resource {afonlygnomadvcf} --panel-of-normals {hg38pon1000gvcf} -O {odir}{sample}.vcf.gz --native-pair-hmm-threads {nthreads}')
 
+def filter_variant(idir, odir, genome_fa, sample):
+    '''
+    Filter Variants Using Mutect2
 
+    filter_variant(idir='/path/idir/', odir='/path/odir/', genome_fa='/path/genome.fa', sample='sample_name')
+        Input
+            idir     : /path/inputdir/vcf/
+            odir     : /path/outdir/vcf/
+            genome_fa: /path/genome.fa
+            sample   : sample.name
+        Output
+            /path/output/dir/var.filter.vcf.gz
+    '''
+    os.system('gatk FilterMutectCalls -V {idir}{sample}.vcf.gz -O {odir}{sample}.filter.vcf.gz -R {genome_fa}')
+    print(f'Output: {odir}{sample}.filter.vcf.gz')
