@@ -34,7 +34,7 @@ def treeomics_input(vcfdir='vcf', odir='./'):
                          19	        49523688	T>A	    ZFP112	32218	39057	59962
 
     '''
-    samp = [os.path.join(vcfdir, f) for f in os.listdir(vcfdir) if f.endswith('.vcf')] #read all vcf files from folder
+    samp = [os.path.join(vcfdir, f) for f in os.listdir(vcfdir) if f.endswith('.vcf.gz')] #read all vcf files from folder
     df = pd.DataFrame() #final treeomics input files dataframe
     i = 1
     for s in samp:#extracting Allelic Depth (AD) and Total Depth (DP) from each vcf files and merging together
