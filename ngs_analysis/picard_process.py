@@ -1,5 +1,5 @@
 import os
-def picard_bam_clean(idir, odir, sample):
+def picard_bam_clean(idir, odir, sample, jvm):
     '''
     PICARD CLEANING SORT BAM FILE
     
@@ -10,7 +10,7 @@ def picard_bam_clean(idir, odir, sample):
             Soft clipping: these sequence are not part of the alignment. 
             Therefore, soft clipping shall be removed. 
     RUN:
-        picard_bam_clean(idir = '/path/to/bam/file/', odir='/path/to/output/dir/', sample=sample_name)
+        picard_bam_clean(idir = '/path/to/bam/file/', odir='/path/to/output/dir/', jvm=15, sample=sample_name)
 
     OUTPUT: /path/to/output/dir/sample.clean.bam
 
@@ -22,13 +22,15 @@ def picard_bam_clean(idir, odir, sample):
                             hard-clipping: bases in 5' and 3' of the read are NOT part of the alignment AND those bases have been removed from the read sequence in the BAM file.
                 INPUT   : Input, sort bam file
                 OUTPUT  : Output, clean bam file
+                jvm     : java memory
 
     '''
     os.makedirs(odir, exist_ok=True)#creat odir if not exists
-    os.system(f"picard CleanSam --INPUT {idir}{sample}.sort.bam --OUTPUT {odir}{sample}.clean.bam")
+    #print(f"picard -Xmx{jvm}G CleanSam --INPUT {idir}{sample}.sort.bam --OUTPUT {odir}{sample}.clean.bam")
+    os.system(f"picard -Xmx{jvm}G CleanSam --INPUT {idir}{sample}.sort.bam --OUTPUT {odir}{sample}.clean.bam")
     print(f"{odir}{sample}.clean.bam is generated successfully...")
 
-def picard_markduplicate(idir, odir, sample):
+def picard_markduplicate(idir, odir, sample, jvm):
     '''
     Mark duplicate reads.
     Setting MAPQ to 0 for unmapped reads
@@ -48,7 +50,8 @@ def picard_markduplicate(idir, odir, sample):
         --METRICS_FILE          : File to write duplication metrics to  Required.  
         --VALIDATION_STRINGENCY : {STRICT, LENIENT, SILENT}. LENIENT Setting stringency to SILENT can improve performance when processing a BAM file in which variable-length data (read, qualities, tags) do not otherwise need to be decoded.  Default value: STRICT.
         --CREATE_INDEX          : {true|false}, Whether to create an index when writing VCF or coordinate sorted BAM output.  Default value: false. Possible values: {true, false} 
+        jvm                     : 15, Java Memory
     '''
     os.makedirs(odir, exist_ok=True)#creat odir if not exists
-    os.system(f"picard MarkDuplicates --INPUT {idir}{sample}.clean.bam --OUTPUT {odir}{sample}.sort.mkdup.bam --METRICS_FILE {odir}{sample}.sort.dup.metrics.txt --VALIDATION_STRINGENCY LENIENT --CREATE_INDEX true")
-    print(f"Successfully generated files: \n\t1: {odir}{sample}.sort.mkdup.bam \n\t2: {odir}{sample}.sort.dup.metrics.txt")
+    os.system(f"picard -Xmx{jvm}G MarkDuplicates --INPUT {idir}{sample}.clean.bam --OUTPUT {odir}{sample}.mkdup.bam --METRICS_FILE {odir}{sample}.dup.metrics.txt --VALIDATION_STRINGENCY LENIENT --CREATE_INDEX true")
+    print(f"Successfully generated files: \n\t1: {odir}{sample}.mkdup.bam \n\t2: {odir}{sample}.dup.metrics.txt")

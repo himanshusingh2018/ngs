@@ -1,10 +1,11 @@
-def tumoronly_nofilter(idir, odir, genome_fa, sample, jvm=5, nthreads=4):
+import os
+def mutect2_nofilter(idir, odir, genome_fa, sample, jvm=5, nthreads=4):
     '''
     GATK Mutect2 Variant Calling Tumor Only Mode [No Filter]
     https://gatk.broadinstitute.org/hc/en-us/articles/360037593851-Mutect2
 
     RUN: 
-        tumoronly_nofilter(idir='/path/idir/', odir='/path/odir/', genome_fa = '/path/refgenome.fa', sample = 'samp_name', jvm=5, nthreads=4)
+        mutect2_nofilter(idir='/path/idir/', odir='/path/odir/', genome_fa = '/path/refgenome.fa', sample = 'samp_name', jvm=5, nthreads=4)
             idir     : '/path/idir/', 
             odir     : '/path/odir/', 
             genome_fa: '/path/refgenome.fa', 
@@ -13,9 +14,9 @@ def tumoronly_nofilter(idir, odir, genome_fa, sample, jvm=5, nthreads=4):
             nthreads : number of threads
     '''
     os.makedirs(odir, exist_ok=True)#create odir if not exists
-    print(f'gatk Mutect2 --java-options -Xmx{jvm}g -R {genome_fa} -I {idir}{sample}.bam -O {odir}{sample}.vcf.gz --native-pair-hmm-threads {nthreads}')
+    print(f'gatk Mutect2 --java-options -Xmx{jvm}g -R {genome_fa} -I {idir}{sample}.mkdup.bam -O {odir}{sample}.vcf.gz --native-pair-hmm-threads {nthreads}')
 
-def tumoronly_filter(idir, odir, genome_fa, afonlygnomadvcf, hg38pon100gvcf, sample, jvm=5, nthreads=4):
+def mutect2_filter(idir, odir, genome_fa, afonlygnomadvcf, hg38pon1000Gvcf, sample, jvm, nthreads):
     '''
     GATK Mutect2 Variant Calling Tumor Only Mode [FILTER]
     https://gatk.broadinstitute.org/hc/en-us/articles/360037593851-Mutect2
@@ -31,7 +32,7 @@ def tumoronly_filter(idir, odir, genome_fa, afonlygnomadvcf, hg38pon100gvcf, sam
                 wget https://storage.googleapis.com/gatk-best-practices/somatic-hg38/1000g_pon.hg38.vcf.gz.tbi
 
     RUN: 
-        tumoronly_nofilter(idir='/path/idir/', odir='/path/odir/', genome_fa = '/path/refgenome.fa', sample = 'samp_name', jvm=5, nthreads=4)
+        mutect2_filter(idir='/path/idir/', odir='/path/odir/', genome_fa = '/path/refgenome.fa', sample = 'samp_name', jvm=5, nthreads=4)
                 idir            : '/path/idir/', 
                 odir            : '/path/odir/', 
                 genome_fa       : '/path/refgenome.fa', 
@@ -43,7 +44,8 @@ def tumoronly_filter(idir, odir, genome_fa, afonlygnomadvcf, hg38pon100gvcf, sam
 
     '''
     os.makedirs(odir, exist_ok=True)#create odir if not exists
-    print(f'gatk Mutect2 --java-options -Xmx{jvm}g -R {genome_fa} -I {idir}{sample}.bam -O {odir}{sample}.vcf.gz --germline-resource {afonlygnomadvcf} --panel-of-normals {hg38pon1000gvcf} -O {odir}{sample}.vcf.gz --native-pair-hmm-threads {nthreads}')
+    os.system(f'gatk Mutect2 --java-options -Xmx{jvm}g -R {genome_fa} -I {idir}{sample}.mkdup.bam -O {odir}{sample}.vcf.gz --germline-resource {afonlygnomadvcf} --panel-of-normals {hg38pon1000Gvcf} --native-pair-hmm-threads {nthreads}')
+    print('Successfully completed:\n\t{odir}{sample}.vcf.gz')
 
 def filter_variant(idir, odir, genome_fa, sample):
     '''
