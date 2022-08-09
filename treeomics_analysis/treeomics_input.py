@@ -125,3 +125,4 @@ def treeomics_input_vcffilter(vcfdir='vcf', odir='./'):
     df[df.columns[~df.columns.str.contains('AD')]].to_csv(f"{odir}coverage.txt", sep="\t", index=False)#remove col with AD partial match and write into file
     
     print(f"Successfully generated:\n\t1: {odir}mut_read_table.txt\n\t2: {odir}coverage.txt")
+    print(f'Before running treeomics_run:\n\tChange columns with sample name by one underscore, e.g. P1_0, P2_1 etc.')
