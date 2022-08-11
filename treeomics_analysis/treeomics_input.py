@@ -34,11 +34,12 @@ def treeomics_input_vcfanotfuncotator(vcfdir='vcf', odir='./'):
                          19	        49523688	T>A	    ZFP112	32218	39057	59962
 
     '''
-    samp = [os.path.join(vcfdir, f) for f in os.listdir(vcfdir) if f.endswith('.vcf.gz')] #read all vcf files from folder
+    samp = [os.path.join(vcfdir, f) for f in os.listdir(vcfdir) if f.endswith('.vcf')] #read all vcf files from folder
     df = pd.DataFrame() #final treeomics input files dataframe
     i = 1
     for s in samp:#extracting Allelic Depth (AD) and Total Depth (DP) from each vcf files and merging together
         print(f'Reading {s}...')
+        
         d = pd.read_csv(s, sep="\t", header=0, comment = '##', engine='python', encoding = 'unicode_escape')
         d = d[d.FILTER == 'PASS'] #Extract variant with Filter: 'PASS'
         d = d[ ['#CHROM', 'POS', 'REF', 'ALT', 'INFO', 'FORMAT', d.columns[-1]] ]
@@ -96,7 +97,7 @@ def treeomics_input_vcffilter(vcfdir='vcf', odir='./'):
                          19	        49523688	T>A	    gene	32218	39057	59962
 
     '''
-    samp = [os.path.join(vcfdir, f) for f in os.listdir(vcfdir) if f.endswith('.vcf.gz')] #read all vcf files from folder
+    samp = [os.path.join(vcfdir, f) for f in os.listdir(vcfdir) if f.endswith('.vcf')] #read all vcf files from folder
     df = pd.DataFrame() #final treeomics input files dataframe
     i = 1
     for s in samp:#extracting Allelic Depth (AD) and Total Depth (DP) from each vcf files and merging together
@@ -126,3 +127,6 @@ def treeomics_input_vcffilter(vcfdir='vcf', odir='./'):
     
     print(f"Successfully generated:\n\t1: {odir}mut_read_table.txt\n\t2: {odir}coverage.txt")
     print(f'Before running treeomics_run:\n\tChange columns with sample name by one underscore, e.g. P1_0, P2_1 etc.')
+
+treeomics_input_vcfanotfuncotator(vcfdir='/Volumes/lilac_data_ziv/transciptome/paired_pnet/Project_12502_F/test_out/vcf/anot/anot/', 
+                                  odir='/Volumes/lilac_data_ziv/transciptome/paired_pnet/Project_12502_F/test_out/vcf/anot/anot/')

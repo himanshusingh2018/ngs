@@ -30,7 +30,10 @@ def gencode_feature_coordinates(gtf, idir='./', odir='./', fout='out'):
         f = pd.read_csv(f'{idir}{gtf}', sep="\t", header=None, comment='#', usecols=[0,2,3,4,6,8], names=['chr','feature','start','end', 'strand', 'info'])#read specific columns from gtf file
         feat = f[f.feature == feature[option]]#[['chr','genomic_start','genomic_end', 'strand', 'info']]
         feat['symbol'] = feat['info'].str.split('gene_name "').str[1].str.split('";').str[0]
-        feat[['chr','start','end', 'strand', 'symbol']].to_csv(f'{odir}{fout}.{option}.txt')
+        #feat['info'] = feat['info'].str.split(';', n=3, expand=False).str[2].str.slice(start=12, stop=-1, step=1)#extract only gene symbol from the column value
+        print('Error to Fix: Output File Name is not Feature.txt')
+        feat[['chr','start','end', 'strand', 'symbol']].to_csv(f'{odir}{fout}.{feature[option]}.txt')
     else:
         print('Please enter correct Option'); exit()
-    print(f'Successfully generated:\n\t{odir}{fout}.{option}.txt')
+    print(f'Successfully generated:\n\t{odir}{fout}.{feature[option]}.txt')
+
