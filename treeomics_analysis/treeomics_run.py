@@ -1,3 +1,4 @@
+import os
 def treeomics_run(idir, odir, fmutread, fcoverage, hgver, nthreads):
     '''
     TREEOMICS: reconstruct the tumor mutation phylogeny
