@@ -54,14 +54,6 @@ def treeomics_input_by_vcf(idir, odir, featCoord, fvcf, filter=None):
     d[['Chromosome','Position','Change','Gene'] + [x for x in d.columns if 'DP' in x]].to_csv(f"{odir}coverage.txt", sep="\t", index=False)#remove columns with DP partial match and write into file
     
     print(f"Successfully generated:\n\t1: {odir}mut_read_table.txt\n\t2: {odir}coverage.txt")
-    
-idir='/Volumes/lilac_data_ziv/transciptome/paired_pnet/Project_12502_F/test_out/tumor_normal/'
-odir=idir
-fvcf='out.txt'
-featCoord = 'hg38.gene.txt'
-treeomics_input_by_vcf(idir=idir, 
-                       odir=idir, featCoord = '/Volumes/lilac_data_ziv/transciptome/paired_pnet/Project_12502_F/test_out/tumor_normal/hg38.gene.txt', 
-                       fvcf=fvcf)
 
 def treeomics_input_vcfanotfuncotator(vcfdir='vcf', odir='./'):
     '''
