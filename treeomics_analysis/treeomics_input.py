@@ -6,30 +6,32 @@ def treeomics_input_by_vcf(idir, odir, featCoord, fvcf, filter=None):
     It generate input files from the VCF file
     
     COMMAND:
-    treeomics_input_by_vcf(idir='./', odir='./', fcvf=fvcf)
+    treeomics_input_by_vcf(idir='./', odir='./', fvcf=fvcf, filter=None)
+        
+        idir   : /path/input/dir/
+        odir   : /path/output/dir/
+        fvcf   : 'file.vcf.gz'
+        filter : None (not filtered); 'PASS': (filter the pass SNPs)
 
     INPUT: VCF File with all Samples, Mutect2 Variant Calling
 
-    OUTPUT:
-    Generate Two Input files for TREEOMICS from Annotated VCF file
+    OUTPUT: Generate Two Input files for TREEOMICS from Annotated VCF file
 
     1. <mut_reads.txt> mut-reads: number of reads reporting a variant (row) in each sample
        AD (Allele Depth) in VCF file (e.g. AD: 1,15; 1: ref and 15: alt)
        AD = 15
-
-            mut-reads table: tab-seperated
-                Columns: Chromosome Position    Change  Gene    Sample1 Sample2 Sample3
-                         17	        4639699	    A>T	    GLTPD2	n/a	    n/a	    34560
-                         6	        25885022	T>C	    SLC17A4	n/a	    n/a	    55792
+                mut-reads table: tab-seperated
+                    Columns: Chromosome Position    Change  Gene    Sample1 Sample2 Sample3
+                             17	        4639699	    A>T	    GLTPD2	n/a	    n/a	    34560
+                             6	        25885022	T>C	    SLC17A4	n/a	    n/a	    55792
 
     2. coverage: tab-separated-value file with the sequencing depth at the position of this variant in each sample
        DP (Total Depth) in VCF file (e.g. DP: 16)
        DP = 16
-
-            coverage table: tab-seperated
-                Columns: Chromosome Position    Change  Gene    Sample1 Sample2 Sample3
-                         17	        4639699	    A>T	    GLTPD2	n/a	    n/a	    34560
-                         6	        25885022	T>C	    SLC17A4	n/a	    n/a	    55792
+                coverage table: tab-seperated
+                    Columns: Chromosome Position    Change  Gene    Sample1 Sample2 Sample3
+                             17	        4639699	    A>T	    GLTPD2	n/a	    n/a	    34560
+                             6	        25885022	T>C	    SLC17A4	n/a	    n/a	    55792
     '''
     featCoord = pd.read_csv(featCoord, sep=",", header=0)
     d = pd.read_csv(f'{idir}{fvcf}', sep="\t", header=0, comment = '##', engine='python', encoding = 'unicode_escape')
@@ -50,7 +52,7 @@ def treeomics_input_by_vcf(idir, odir, featCoord, fvcf, filter=None):
     d = d.assign(ALT=d.ALT.str.split(',')).explode('ALT').reset_index(drop=True)#all comma separated values in ALT in new rows
 
     d.rename(columns= {'#CHROM': 'Chromosome', 'POS': 'Position'}, inplace=True)#change column names
-    d[['Chromosome','Position','Change','Gene'] + [x for x in d.columns if 'AP' in x]].to_csv(f"{odir}mut_read_table.txt", sep="\t", index=False)#remove columns with DP partial match and write into file
+    d[['Chromosome','Position','Change','Gene'] + [x for x in d.columns if 'AD' in x]].to_csv(f"{odir}mut_read_table.txt", sep="\t", index=False)#remove columns with DP partial match and write into file
     d[['Chromosome','Position','Change','Gene'] + [x for x in d.columns if 'DP' in x]].to_csv(f"{odir}coverage.txt", sep="\t", index=False)#remove columns with DP partial match and write into file
     
     print(f"Successfully generated:\n\t1: {odir}mut_read_table.txt\n\t2: {odir}coverage.txt")
@@ -163,17 +165,14 @@ def treeomics_input_vcffilter(vcfdir='vcf', odir='./'):
         d = d.assign(ALT=d.ALT.str.split(',')).explode('ALT').reset_index(drop=True)#all comma separated values in ALT in new rows
 
         d['Gene'] = 'gene' #No gene annotation so 'gene' is used
-        #d['Gene'] = d.INFO.str.split('[').str[1].str.split('|').str[0] #Extract Gene Symbol
         d['Change'] = d['REF'].astype(str) + '>' + d['ALT'].astype(str) #Merging Ref > Alt
         
         if(i == 1):#Only First VCF file Extracted information merge with empty df 
-            df = d[['#CHROM', 'POS', 'Change', 'Gene', f'{sname}AD', f'{sname}DP']]
-            i+=1
+            df = d[['#CHROM', 'POS', 'Change', 'Gene', f'{sname}AD', f'{sname}DP']]; i+=1
         else:#Merge other VCF file information
             df = df.merge(d[['#CHROM', 'POS', 'Change', 'Gene', f'{sname}AD', f'{sname}DP']], 
-                          how='outer',
-                          on=['#CHROM', 'POS', 'Change', 'Gene'])
-           
+                          how='outer', on=['#CHROM', 'POS', 'Change', 'Gene'])
+
     df.rename(columns= {'#CHROM': 'Chromosome', 'POS': 'Position'}, inplace=True)#change column names
     print(df[df.columns[~df.columns.str.contains('DP')]].head(4))#check output of merged VCF extracted information
     df[df.columns[~df.columns.str.contains('DP')]].to_csv(f"{odir}mut_read_table.txt", sep="\t", index=False)#remove columns with DP partial match and write into file
