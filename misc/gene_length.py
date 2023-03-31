@@ -7,6 +7,3 @@ def gene_length(gtf_url):
     gtf['gene_length'] = (gtf.start - gtf.end).abs()+1
     gtf.drop_duplicates(subset='gene_symbol', keep='first', inplace=True)
     return(gtf)
-
-a = gene_length(gtf_url='http://hgdownload.cse.ucsc.edu/goldenpath/hg19/bigZips/genes/hg19.refGene.gtf.gz')
-print(a)
