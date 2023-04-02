@@ -52,7 +52,7 @@ NGS Data Analysis
         
     misc
         extract_data_between_two_pattern: Extract data between two pattern
-        gene_length: Extract gene length (exon+intron) by hg19.refgene.txt.gz
+        gene_length: Extract transcript(exon+intron)/exon (added all exon) wise gene length by hg19.refgene.txt.gz
         gtf_process: Extract FEATURE Specific Coordinates from Gencode GTF file (Region: PRI)
         sample_vs_gene_mut_table: convert into mutation table
         snp_anot: annotate vcf file using genomefeat table
