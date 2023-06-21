@@ -18,6 +18,7 @@ NGS Data Analysis
             tumoronly_nofilter : Mutect2 Somatic Variant Calling Tumor Only Mode [No Filter]
             tumoronly_filter   : Mutect2 Somatic Variant Calling Tumor Only Mode [Filter: af-only-gnomad.vcf.gz and 1000g_pon.hg38.vcf.gz]
             filter variant     : Mutect2 Filter Variants [PASS]
+        pnet.impact.wes.py : Extract WES Mutation from IMPACT Data
 
     ngs_analysis
         genome_index
