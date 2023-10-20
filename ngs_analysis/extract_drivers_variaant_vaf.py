@@ -37,13 +37,28 @@ for i, row in driver_gene.iterrows():
     # Apply the split operation to columns from index 11 to the end
     cols_to_process = df.iloc[:, 10:]
     result = cols_to_process.apply(lambda x: x.str.split(':').str[1:3])
-    df.iloc[:, 11:] = result
-    
+    df.iloc[:, 10:] = result
     driver_mutation = pd.concat([driver_mutation, df], ignore_index=True)# Append the DataFrame to driver_mutation
 
 driver_mutation.reset_index(drop=True, inplace=True)# Reset the index
-print(f'Driver mutation samples:\n\t{driver_mutation.columns}')
-driver_mutation.to_csv(f'{sys.argv[1]}.driver_mutation.txt',sep="\t",header=True,index=False)
+driver_mutation.to_csv(f'{sys.argv[1]}/{sys.argv[1]}.driver_mutation.txt',sep="\t",header=True,index=False)
+#extracting variant allele depth
+variant_ad = pd.DataFrame()
+for i, row in driver_gene.iterrows():
+    print(row['Gene'])
+    df = vcf[(vcf.FILTER == 'PASS') & (row['chr'] == vcf['Chromosome']) & (vcf['Position'] >= row['start']) & (vcf['Position'] <= row['end'])]
+    df.insert(0, 'Gene', row['Gene'])# Insert 'Gene' column at the beginning
+    # Apply the split operation to columns from index 11 to the end
+    cols_to_process = df.iloc[:, 10:]
+    result = cols_to_process.apply(lambda x: x.str.split(':').str[1]).apply(lambda x: x.str.split(',').str[1])
+    df.iloc[:, 11:] = result
+    variant_ad = pd.concat([variant_ad, df], ignore_index=True)# Append the DataFrame to driver_mutation
+variant_ad = variant_ad[['Gene'] + variant_ad.columns[11:].tolist()].drop_duplicates(keep='first')
+
+variant_ad.to_csv(f'/Users/singhh5/Desktop/mutation/result/{sys.argv[1]}.variant_ad.txt',sep=",",header=True,index=False)
+#variant_ad[['Gene'] + variant_ad.columns[11:].tolist()].to_csv(f'/Users/singhh5/Desktop/mutation/result/{sys.argv[1]}.variant_ad.txt',
+#                                                               sep=",",header=True,index=False)
+
 '''
 set input dir path
 os.chdir('/Volumes/lilac_data_ziv/transciptome/paired_pnet/wes_analysis/')#set input dir path
