@@ -21,10 +21,11 @@ def accessible_region_gencode_ref_genome(idir, odir, fin, fout):
 
 def refflet_gtf(idir, odir, ingtf, fout):
     '''
-    UCSC refFlat.txt
+    UCSC refFlat.txt download from google cloud
+    https://cloud.google.com/life-sciences/docs/resources/public-datasets/ucsc?_ga=2.45345068.-980710568.1698679471
     '''
-    os.system(f'')
-    pass
+    os.system(f'wget http://hgdownload.cse.ucsc.edu/goldenPath/hg19/database/refFlat.txt.gz')
+    #pass
 
 
 
