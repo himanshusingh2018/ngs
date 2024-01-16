@@ -4,6 +4,11 @@ def mutect2_nofilter(idir, odir, genome_fa, sample, jvm=5, nthreads=4):
     GATK Mutect2 Variant Calling Tumor Only Mode [No Filter]
     https://gatk.broadinstitute.org/hc/en-us/articles/360037593851-Mutect2
 
+    gatk Mutect2 --java-options -Xmx200G --native-pair-hmm-threads 40 \
+    -R /home/singhh5/hg19_gatk/Homo_sapiens_assembly19.fasta \
+    -I sort_bam/144_3_IGO_12502_U_18_merge.mkdup.bam -I sort_bam/PL031986-T.mkdup.bam \
+    -I sort_bam/IT755846-N.mkdup.bam -normal JX6742082895RS_IT755846-N -O vcf/pid144.vcf.gz
+    
     RUN: 
         mutect2_nofilter(idir='/path/idir/', odir='/path/odir/', genome_fa = '/path/refgenome.fa', sample = 'samp_name', jvm=5, nthreads=4)
             idir     : '/path/idir/', 
