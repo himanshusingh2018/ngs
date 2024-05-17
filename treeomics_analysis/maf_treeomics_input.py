@@ -37,30 +37,3 @@ def convert_maf_treeomics_input(maf_file):
     print(mut.head())
 
 convert_maf_treeomics_input(maf_file='Proj_08138_C___FILLOUT.V3b.maf.txt')
-
-# cols = ['Chromosome',
-#         'Start_Position',
-#         'Tumor_Seq_Allele1',
-#         'Tumor_Seq_Allele2',
-#         'Hugo_Symbol',
-#         'Tumor_Sample_Barcode',
-#         't_depth',#coverage.txt
-#         't_alt_count']#mut_read_table.txt
-
-# df = pd.read_csv('Proj_08138_C___FILLOUT.V3b.maf.txt', sep="\t", header=0, comment='#',usecols=cols)
-# df['Change'] = df.Tumor_Seq_Allele1 + '>' + df.Tumor_Seq_Allele2
-# #print(df[df.Hugo_Symbol == 'TNFRSF14'])
-
-# df1 = df[['Chromosome','Start_Position', 'Change', 'Hugo_Symbol', 'Tumor_Sample_Barcode','t_depth']]
-# #print(df1)
-# df1 = df.head()
-# pivot_df = df.pivot_table(index=['Chromosome', 'Start_Position', 'Change', 'Hugo_Symbol'],
-#                           columns='Tumor_Sample_Barcode',
-#                           values='t_depth',
-#                           aggfunc='first')
-
-# pivot_df = pivot_df.reset_index()# Reset the index
-# pivot_df.columns.name = None# Rename the columns
-# print(pivot_df)
-# pivot_df.to_csv('test.txt',sep="\t",header=True, index=False)
-# #Columns: Chromosome Position    Change  Gene    Sample1 Sample2 Sample3
