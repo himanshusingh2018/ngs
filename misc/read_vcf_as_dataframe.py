@@ -4,7 +4,8 @@ def read_vcf_as_dataframe(fvcf):
         Comment all rows starting as '#'
         Column Names: starting with '#CHROM'
     '''
-    col = next(l.strip().split('\t') for l in gzip.open('pid1.filter.vcf.gz', 'rt', encoding='utf-8') if l.startswith('#CHROM'))
+    #col = next(l.strip().split('\t') for l in gzip.open('pid1.filter.vcf.gz', 'rt', encoding='utf-8') if l.startswith('#CHROM'))
+    col = next(l.strip().split('\t') for l in (gzip.open(fvcf, 'rt', encoding='utf-8') if fvcf.endswith('.gz') else open(fvcf, 'r', encoding='utf-8')) if l.startswith('#CHROM'))
     vcf = pd.read_csv(fvcf, sep="\t",header=None, comment='#', names=col)
     return(vcf)
 
