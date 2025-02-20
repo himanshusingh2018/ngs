@@ -1,0 +1,17 @@
+# STAR Aligner for RNAseq
+STAR --runThreadN 30 
+     --readFilesIn seq_R1.fastq.gz seq_R2.fastq.gz
+     --genomeDir hg19_genome_index 
+     --outSAMtype BAM SortedByCoordinate 
+     --outFileNamePrefix seq 
+     --outSAMunmapped Within 
+     --readFilesCommand zcat
+
+# HTseq count using BAM file
+htseq-count --format=bam 
+            --order=pos 
+            --stranded=no 
+            --type=exon 
+            --idattr=gene_id 
+            se1.bam hg19.refGene.gtf > 11_S331_L004.counts.txt
+            -n 30
