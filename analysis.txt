@@ -1,0 +1,16 @@
+---------------------------
+Mutation Signature Analysis
+---------------------------
+#extract Paired T vs N into an vcf file using vcf2maf.pl
+conda activate ngs
+perl vcf2vcf.pl --input-vcf weird.vcf --output-vcf not_weird.vcf --vcf-tumor-id WD4086 --vcf-normal-id NB4086
+
+grep only PASS snps and write into input folder
+conda activate SigProfiler/sigprofile
+conda activate /lila/data/ziv/transciptome/paired_pnet/Software/SigProfilerExtractor/sigprofiler/
+
+from SigProfilerExtractor import sigpro as sig
+
+sig.sigProfilerExtractor("vcf", "result", "input_vcf", reference_genome="GRCh37", minimum_signatures=1, maximum_signatures=10, nmf_replicates=100)
+
+
